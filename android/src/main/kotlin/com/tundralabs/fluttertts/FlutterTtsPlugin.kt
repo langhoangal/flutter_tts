@@ -14,6 +14,7 @@ import android.provider.OpenableColumns
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
+import android.media.AudioManager
 import io.flutter.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.BinaryMessenger
@@ -386,6 +387,11 @@ class FlutterTtsPlugin : MethodCallHandler, FlutterPlugin {
                 setVolume(volume.toFloat(), result)
             }
 
+            "setSoundOutputChannel" -> {
+                val channel: String = call.arguments.toString()
+                setSoundOutputChannel(channel.toInt(), result)
+            }
+
             "setPitch" -> {
                 val pitch: String = call.arguments.toString()
                 setPitch(pitch.toFloat(), result)
@@ -518,6 +524,15 @@ class FlutterTtsPlugin : MethodCallHandler, FlutterPlugin {
             Log.d(tag, "Invalid volume $volume value - Range is from 0.0 to 1.0")
             result.success(0)
         }
+    }
+
+     private fun setSoundOutputChannel(channel: Int, result: Result) {
+        when (channel) {
+            0 -> bundle!!.putInt( TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_ALARM)
+            1 -> bundle!!.putInt( TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_MUSIC)
+            2 -> bundle!!.putInt( TextToSpeech.Engine.KEY_PARAM_STREAM, AudioManager.STREAM_NOTIFICATION)
+        }
+        result.success(1)
     }
 
     private fun setPitch(pitch: Float, result: Result) {

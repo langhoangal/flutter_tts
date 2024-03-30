@@ -362,6 +362,9 @@ class FlutterTts {
     return await _channel.invokeMethod<int?>('getMaxSpeechInputLength');
   }
 
+  Future<dynamic> setSoundOutputChannel(int channel) async =>
+      await _channel.invokeMethod('setSoundOutputChannel', channel);
+
   /// [Future] which invokes the platform specific method for synthesizeToFile
   /// ***Android and iOS supported only***
   Future<dynamic> synthesizeToFile(String text, String fileName) async =>
